@@ -6,7 +6,6 @@ COPY requirements.txt .
 
 RUN pip install -r requirements.txt
 
-COPY ./mapping ./mapping
-COPY ./test_data ./test_data
+COPY . .
 
-CMD python ./mapping/data_manipulation.py
+CMD python ./main.py

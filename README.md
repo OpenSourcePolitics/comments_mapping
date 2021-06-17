@@ -1,5 +1,5 @@
 # Comments mapping
-###Purpose
+### Purpose
 This repository aims to aggregate the Decidim separated exports: proposals and comments. 
 It will map all the comments with their respective proposals. 
 Two output formats are expected : .txt and .csv 
@@ -7,11 +7,11 @@ Two output formats are expected : .txt and .csv
 - csv : all the information relative to a proposal is stored in a row
 
 ## Getting started 
-###Requirements 
+### Requirements 
 - Python >= 3.8
 - Strongly recommended : a virtual environment manager
 
-###Setup 
+### Setup 
 - clone the repository 
 - if you have python and pip already installed 
     - create an environment python
@@ -30,7 +30,7 @@ Two output formats are expected : .txt and .csv
     - docker run -it python-mapping /bin/bash 
   ```
     
-###Next steps 
+### Next steps 
 - [ ] Flask api 
 - [ ] local tests with postman
 - [ ] small interface

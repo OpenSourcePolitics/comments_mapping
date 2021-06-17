@@ -4,8 +4,25 @@ proposals of two distinct csv like files
 """
 import csv
 import os
+import pandas as pd
 from mapping.utils.node_proposal import NodeProposal
 from mapping.utils.node_comment import NodeComment
+
+
+def get_data(comment_file_path, proposal_file_path):
+    """
+    This function is a temporary. It deals with file reading and convert it to a pandas dataframe
+    used in tests and for local execution
+    :param comment_file_path: path to the comment file
+    :type comment_file_path: str
+    :param proposal_file_path: path to the proposal file
+    :type proposal_file_path: str
+    :return: two dataframes : one storing the proposal and the other storing the comments
+    :rtype: tuple
+    """
+    df_coms = pd.read_excel(comment_file_path)
+    df_props = pd.read_excel(proposal_file_path)
+    return df_props, df_coms
 
 
 def create_parent_prop(dataframe_prop, commentable_id, comment_object, hash_proposals):
@@ -78,7 +95,7 @@ def init_index(proposals_dataframe, comments_dataframe):
             else:
                 create_parent_comments(comments_dataframe, commentable_id=com[1]["commentable_id"],
                                        comment_object=comment, hash_comments=hash_comments)
-    return hash_proposals
+    return list(hash_proposals.values())
 
 
 def init_txt(hash_proposals):
@@ -88,7 +105,7 @@ def init_txt(hash_proposals):
     """
     with open(os.path.join(os.getcwd(), "test_data/mapping_proposals_comments.txt"),
               'w', encoding="utf-8") as txt_file:
-        for proposal in hash_proposals.values():
+        for proposal in hash_proposals:
             txt_file.write("NOUVELLE PROPOSITION\n")
             proposal.write_txt(0, txt_file)
             txt_file.write('\n\n\n\n\n\n\n')
@@ -102,7 +119,7 @@ def init_csv(hash_proposals):
     row_list = []
     node_list = []
     row_list.append(["titre", "body", "soutiens", "commentaires"])
-    for proposal in hash_proposals.values():
+    for proposal in hash_proposals:
         row_list.append(proposal.get_attributes_as_list(node_list))
     with open(os.path.join(os.getcwd(), "test_data/mapping_proposals_comments.csv"),
               'w', newline="") as file:

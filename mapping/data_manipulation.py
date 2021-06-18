@@ -117,11 +117,16 @@ def init_csv(hash_proposals):
     relative information to a proposal and its comments
     """
     row_list = []
-    node_list = []
     row_list.append(["titre", "body", "soutiens", "commentaires"])
     for proposal in hash_proposals:
+        node_list = []
         row_list.append(proposal.get_attributes_as_list(node_list))
-    with open(os.path.join(os.getcwd(), "test_data/mapping_proposals_comments.csv"),
-              'w', newline="") as file:
-        writer = csv.writer(file)
-        writer.writerows(row_list)
+        if os.path.basename(os.path.normpath(os.getcwd())) != "comments_mapping":
+            os.chdir('..')
+        with open(os.path.join(os.getcwd(), "test_data/mapping_proposals_comments.csv"),
+                  'w', newline="") as file:
+            writer = csv.writer(file)
+            writer.writerows(row_list)
+
+    dataframe = pd.DataFrame(row_list)
+    return dataframe

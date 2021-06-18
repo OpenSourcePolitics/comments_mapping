@@ -1,8 +1,11 @@
 """
 Test data structure
 """
+import os
+
 import pytest
-from mapping.data_manipulation import init_index, get_data
+import filecmp
+from mapping.data_manipulation import init_index, get_data, init_csv
 from mapping.utils.node_proposal import NodeProposal
 from mapping.utils.node_comment import NodeComment
 
@@ -40,7 +43,7 @@ CONFIG_2 = [NodeProposal(title="P0 titre",
             NodeProposal(title="P1 titre",
                          body="P1",
                          supports=5,
-                         children=[])]
+                         children=[NodeComment(body='C4', children=[])])]
 
 CONFIG_3 = [NodeProposal(title="P0 titre",
                          body="P0",
@@ -60,8 +63,23 @@ TEST_CASES = [(df_prop_config1, df_coms_config1, CONFIG_1),
               (df_prop_config3, df_coms_config3, CONFIG_3)]
 
 
-@pytest.mark.parametrize("proposal_dataframe, comments_dataframe, output ", TEST_CASES)
-def test_tree_structure(proposal_dataframe, comments_dataframe, output):
-    nodes = init_index(proposal_dataframe, comments_dataframe)
+@pytest.mark.parametrize("proposals_dataframe, comments_dataframe, output ", TEST_CASES)
+def test_tree_structure(proposals_dataframe, comments_dataframe, output):
+    nodes = init_index(proposals_dataframe, comments_dataframe)
     for node_test, node_validation in zip(nodes, output):
         assert nodes_equal(node_test, node_validation)
+
+
+@pytest.mark.parametrize("proposals_dataframe, comments_dataframe, output ", TEST_CASES)
+def test_csv_integrity(proposals_dataframe, comments_dataframe, output):
+    hash_prop = init_index(proposals_dataframe, comments_dataframe)
+    for elem in output:
+        if len(elem.children) == 0:
+            output.remove(elem)
+    df_test = init_csv(hash_prop)
+    assert len(df_test)-1 == len(output)
+
+
+@pytest.mark.parametrize("proposals_dataframe, comments_dataframe, output ", TEST_CASES)
+def test_txt_integrity(proposals_dataframe, comments_dataframe, output):
+    pass

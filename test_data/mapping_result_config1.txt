@@ -1,0 +1,16 @@
+NOUVELLE PROPOSITION
+Titre : P0 titre
+Corps de contribution : P0 body
+Soutiens : 12
+
+  Commentaire : C1
+    Commentaire : C0
+      Commentaire : R1
+    Commentaire : R2
+
+
+
+
+
+
+

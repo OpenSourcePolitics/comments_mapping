@@ -92,4 +92,4 @@ def test_txt_integrity(proposals_dataframe, comments_dataframe, output):
     dir_path = os.path.dirname(os.path.realpath(__file__))
     hash_prop = init_index(proposals_dataframe, comments_dataframe)
     init_txt(hash_prop)
-    assert filecmp.cmp(os.path.join(dir_path, "../test_data/mapping_proposals_comments.txt"), output)
+    assert filecmp.cmp(os.path.join(dir_path, "../dist/mapping_proposals_comments.txt"), output)

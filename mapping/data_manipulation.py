@@ -103,7 +103,7 @@ def init_txt(hash_proposals):
     This function will call the Node.write_txt() method to output a .txt file of all the proposals
     and their respective comments.
     """
-    with open(os.path.join(os.getcwd(), "test_data/mapping_proposals_comments.txt"),
+    with open(os.path.join(os.getcwd(), "dist/mapping_proposals_comments.txt"),
               'w', encoding="utf-8") as txt_file:
         for proposal in hash_proposals:
             txt_file.write("NOUVELLE PROPOSITION\n")
@@ -123,7 +123,7 @@ def init_csv(hash_proposals):
         row_list.append(proposal.get_attributes_as_list(node_list))
         if os.path.basename(os.path.normpath(os.getcwd())) != "comments_mapping":
             os.chdir('..')
-        with open(os.path.join(os.getcwd(), "test_data/mapping_proposals_comments.csv"),
+        with open(os.path.join(os.getcwd(), "dist/mapping_proposals_comments.csv"),
                   'w', newline="") as file:
             writer = csv.writer(file)
             writer.writerows(row_list)

@@ -1,0 +1,29 @@
+NOUVELLE PROPOSITION
+Titre : P0 titre
+Corps de contribution : P0
+Soutiens : 12
+
+  Commentaire : C0
+  Commentaire : C1
+  Commentaire : C2
+  Commentaire : C3
+
+
+
+
+
+
+
+NOUVELLE PROPOSITION
+Titre : P1 titre
+Corps de contribution : P1
+Soutiens : 5
+
+  Commentaire : C4
+
+
+
+
+
+
+

@@ -20,9 +20,36 @@ def get_data(comment_file_path, proposal_file_path):
     :return: two dataframes : one storing the proposal and the other storing the comments
     :rtype: tuple
     """
-    df_coms = pd.read_excel(comment_file_path)
-    df_props = pd.read_excel(proposal_file_path)
+    _, file_extension_comments = os.path.splitext(comment_file_path)
+    _, file_extension_proposals = os.path.splitext(proposal_file_path)
+    if file_extension_comments == ".csv" and file_extension_proposals == ".csv":
+        df_coms = pd.read_csv(comment_file_path, sep=";", encoding="utf-8")
+        df_props = pd.read_csv(proposal_file_path, sep=";", encoding="utf-8")
+    elif file_extension_comments == ".xls" and file_extension_proposals == ".xls":
+        df_coms = pd.read_excel(comment_file_path)
+        df_props = pd.read_excel(proposal_file_path)
+    elif file_extension_comments == ".csv" and file_extension_proposals == ".xls":
+        df_coms = pd.read_csv(comment_file_path, sep=";", encoding="utf-8")
+        df_props = pd.read_excel(proposal_file_path)
+    elif file_extension_comments == ".xls" and file_extension_proposals == ".csv":
+        df_coms = pd.read_excel(comment_file_path)
+        df_props = pd.read_csv(proposal_file_path, sep=";", encoding="utf-8")
     return df_props, df_coms
+
+
+def keep_fr_local(df_props):
+    """
+    Renames the body/fr and the title/fr columns in body and title => only the french local
+    will be kept for mapping
+    :param df_props: dataframe structure storing the proposals
+    :return:updated dataframe
+    """
+    for column in df_props.columns:
+        if column == "title/fr":
+            df_props = df_props.rename(columns={"title/fr": "title"})
+        elif column == "body/fr":
+            df_props = df_props.rename(columns={"body/fr": "body"})
+    return df_props
 
 
 def create_parent_prop(dataframe_prop, commentable_id, comment_object, hash_proposals):
@@ -69,6 +96,7 @@ def init_index(proposals_dataframe, comments_dataframe):
     :return: dictionary storing all parent objects -> proposals object
     :rtype: dict
     """
+    proposals_dataframe = keep_fr_local(proposals_dataframe)
     hash_proposals = {}
     hash_comments = {}
     for com in comments_dataframe.iterrows():

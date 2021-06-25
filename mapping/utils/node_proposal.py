@@ -24,8 +24,8 @@ class NodeProposal(Node):
         :param file: opened file cf- init_txt()
         """
         indent = 2 * indent_num * " "
-        file.write(indent + 'Titre : ' + self.title + '\n')
-        file.write(indent + 'Corps de contribution : ' + self.body + '\n')
+        file.write(indent + 'Titre : ' + str(self.title) + '\n')
+        file.write(indent + 'Corps de contribution : ' + str(self.body) + '\n')
         file.write(indent + 'Soutiens : ' + str(self.supports) + '\n\n')
         for child in self.children:
             child.write_txt(indent_num + 1, file)

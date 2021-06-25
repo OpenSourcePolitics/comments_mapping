@@ -29,6 +29,15 @@ Otherwise, the script will not be able to run.
 - the results ```"mapping_proposals_comments.csv"``` and ```"mapping_proposals_comments.txt"``` will automatically be added to the directory 
  ```./comments_mapping/dist```  once you have executed the former instruction
   
+  
+**Check your result :**
+  if you're under linux or Mac you can use the cd command to go into the dist directory and check for your files :
+- ```cd dist``` -> go from comments_mapping to ./comments_mapping/dist
+- ```cd ..``` -> come back to the upper directory for example from ./comments_mapping/dist to ./comments_mapping
+
+
+You can also just investigate the directories and files with you usual file system.
+  
 **Run on your own files**
 - add the files you want to map together in the directory : ```./comments_mapping/test_data ```
 - update the file called in main.py here : ```df_proposals, df_comments = get_data(os.path.join(os.getcwd(),

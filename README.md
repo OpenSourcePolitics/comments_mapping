@@ -26,7 +26,7 @@ Otherwise, the script will not be able to run.
 - if not already available : install Docker (see [here](https://docs.docker.com/get-docker/))
 - to execute the container and retrieve the results of the mapping for the first configuration please use the command : ```make start```  
   at the root of the project.
-- the results ```"mapping_proposals_comments.csv"``` and ```"mapping_proposals_comments.txt"``` will automatically be added to the directory 
+- the results ```"mapping_proposals_comments.csv"```, ```"mapping_proposals_comments.txt"``` and ```mapping_proposals_comments.docx``` will automatically be added to the directory 
  ```./comments_mapping/dist```  once you have executed the former instruction
   
   
@@ -49,7 +49,16 @@ Please note that if you do not have personal data to execute the script on you c
 ```./test_data``` to see it in action. 
 You'll just have to change the files called in the main as explained before.
 
+**USE A SORTING ARGUMENT**
 
+In order to ease your work on these files a sorting properties were also implemented. 
+Thus, you'll be able to choose between to arguments to sort the order in which the proposals will be displayed. 
+In the function ```init_csv()```, ```init_txt()``` and ```init_docx```, you can add an argument "sorting_attribute"
+- write **commentaires** if you want to display the proposals which received the higher number of comments 
+- write **supports** if you want to see first the proposals which received the higher number of endorsements
+
+Additional Note : by default the proposals will be displayed as if the argument "commentaires" was passed to the function.
+It means that you'll see the most commented proposals first. Use the instructions above to change this behaviour. 
   
 **Execution without Makefile**
   ```

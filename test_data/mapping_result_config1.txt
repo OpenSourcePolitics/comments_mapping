@@ -1,7 +1,9 @@
 NOUVELLE PROPOSITION
 Titre : P0 titre
 Corps de contribution : P0 body
+Categorie : cat
 Soutiens : 12
+Nombre de commentaires : 4
 
   Commentaire : C1
     Commentaire : C0
@@ -14,3 +16,4 @@ Soutiens : 12
 
 
 
+

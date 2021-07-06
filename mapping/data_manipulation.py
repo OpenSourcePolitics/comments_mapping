@@ -4,6 +4,7 @@ proposals of two distinct csv like files
 """
 import csv
 import os
+import docx
 import pandas as pd
 from mapping.utils.node_proposal import NodeProposal
 from mapping.utils.node_comment import NodeComment
@@ -39,7 +40,7 @@ def get_data(comment_file_path, proposal_file_path):
 
 def keep_fr_local(df_props):
     """
-    Renames the body/fr and the title/fr columns in body and title => only the french local
+    Renames the body/fr, title/fr, category/name/fr columns in body, title, category => only the french local
     will be kept for mapping
     :param df_props: dataframe structure storing the proposals
     :return:updated dataframe
@@ -49,6 +50,8 @@ def keep_fr_local(df_props):
             df_props = df_props.rename(columns={"title/fr": "title"})
         elif column == "body/fr":
             df_props = df_props.rename(columns={"body/fr": "body"})
+        elif column == "category/name/fr":
+            df_props = df_props.rename(columns={"category/name/fr": "category"})
     return df_props
 
 
@@ -65,7 +68,9 @@ def create_parent_prop(dataframe_prop, commentable_id, comment_object, hash_prop
     prop_node = NodeProposal(title=specific_row["title"].values[0],
                              body=specific_row["body"].values[0],
                              children=[comment_object],
-                             supports=specific_row["endorsements/total_count"].values[0])
+                             supports=specific_row["endorsements/total_count"].values[0],
+                             nb_comments=specific_row["comments"].values[0],
+                             category=specific_row["category"].values[0])
     hash_proposals[int(specific_row["id"].values[0])] = prop_node
     return hash_proposals
 
@@ -93,8 +98,8 @@ def init_index(proposals_dataframe, comments_dataframe):
     Mapping is done thanks to the children argument in the Node class
     :param proposals_dataframe: data structure containing all proposals
     :param comments_dataframe: data structure containing all comments
-    :return: dictionary storing all parent objects -> proposals object
-    :rtype: dict
+    :return: list storing all parent objects -> proposals object
+    :rtype: list
     """
     proposals_dataframe = keep_fr_local(proposals_dataframe)
     hash_proposals = {}
@@ -126,27 +131,55 @@ def init_index(proposals_dataframe, comments_dataframe):
     return list(hash_proposals.values())
 
 
-def init_txt(hash_proposals):
+def sort_proposal_objects(hash_proposals, sorting_attribute):
+    """
+    sort the objects based on the argument given by the user : either supports or "commentaires".
+    the most commented proposals or the most supported will be displayed first
+    :param hash_proposals: list storing all parent objects -> proposals object
+    :param sorting_attribute: either "supports" or "commentaires"
+    :return: sorted list
+    :rtype: list
+    """
+    if sorting_attribute == "supports":
+        support_sorting = sorted(hash_proposals, key=lambda x: x.supports, reverse=True)
+        return support_sorting
+    elif sorting_attribute == "commentaires":
+        comments_sorting = sorted(hash_proposals, key=lambda x: x.nb_comments, reverse=True)
+        return comments_sorting
+
+
+def init_txt(hash_proposals, sorting_attribute=None):
     """
     This function will call the Node.write_txt() method to output a .txt file of all the proposals
     and their respective comments.
+    :param hash_proposals: list of parent objects
+    :param sorting_attribute: either "supports" or "commentaires"
     """
+    if sorting_attribute is None:
+        sorting_attribute = "commentaires"
+    sorted_hash_proposals = sort_proposal_objects(hash_proposals, sorting_attribute=sorting_attribute)
     with open(os.path.join(os.getcwd(), "dist/mapping_proposals_comments.txt"),
               'w', encoding="utf-8") as txt_file:
-        for proposal in hash_proposals:
+        for proposal in sorted_hash_proposals:
             txt_file.write("NOUVELLE PROPOSITION\n")
             proposal.write_txt(0, txt_file)
             txt_file.write('\n\n\n\n\n\n\n')
+            txt_file.write('\f')
 
 
-def init_csv(hash_proposals):
+def init_csv(hash_proposals, sorting_attribute=None):
     """
     This function will create a .csv file which will display on a single row the
     relative information to a proposal and its comments
+    :param hash_proposals: list of parent objects
+    :param sorting_attribute: either "supports" or "commentaires"
+    :return: structured dataframe
     """
-    row_list = []
-    row_list.append(["titre", "body", "soutiens", "commentaires"])
-    for proposal in hash_proposals:
+    if sorting_attribute is None:
+        sorting_attribute = "commentaires"
+    sorted_hash_proposals = sort_proposal_objects(hash_proposals, sorting_attribute=sorting_attribute)
+    row_list = [["titre", "body", "categorie", "soutiens", "nombre de commentaires", "liste de commentaires"]]
+    for proposal in sorted_hash_proposals:
         node_list = []
         row_list.append(proposal.get_attributes_as_list(node_list))
         if os.path.basename(os.path.normpath(os.getcwd())) != "comments_mapping":
@@ -158,3 +191,20 @@ def init_csv(hash_proposals):
 
     dataframe = pd.DataFrame(row_list)
     return dataframe
+
+
+def init_docx(hash_proposals, sorting_attribute=None):
+    """
+    This function will create a docx file that will display each proposal on a new page with
+    some layout for readability
+    :param hash_proposals: list of parent objects
+    :param sorting_attribute: either "supports" or "commentaires"
+    """
+    if sorting_attribute is None :
+        sorting_attribute = "commentaires"
+    sorted_hash_proposals = sort_proposal_objects(hash_proposals, sorting_attribute=sorting_attribute)
+    document = docx.Document()
+    for proposal in sorted_hash_proposals:
+        proposal.write_docx(0, document)
+        document.add_page_break()
+    document.save(os.path.join(os.getcwd(), "dist/mapping_proposals_comments.docx"))

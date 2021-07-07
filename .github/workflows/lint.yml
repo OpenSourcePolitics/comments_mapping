@@ -7,7 +7,7 @@ on:
   push:
     branches:
       - develop
-      - master
+      - main
   pull_request:
     branches-ignore:
       - "chore"

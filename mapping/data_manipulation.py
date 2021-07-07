@@ -141,11 +141,10 @@ def sort_proposal_objects(hash_proposals, sorting_attribute):
     :rtype: list
     """
     if sorting_attribute == "supports":
-        support_sorting = sorted(hash_proposals, key=lambda x: x.supports, reverse=True)
-        return support_sorting
+        sorted_list = sorted(hash_proposals, key=lambda x: x.supports, reverse=True)
     elif sorting_attribute == "commentaires":
-        comments_sorting = sorted(hash_proposals, key=lambda x: x.nb_comments, reverse=True)
-        return comments_sorting
+        sorted_list = sorted(hash_proposals, key=lambda x: x.nb_comments, reverse=True)
+    return sorted_list
 
 
 def init_txt(hash_proposals, sorting_attribute=None):

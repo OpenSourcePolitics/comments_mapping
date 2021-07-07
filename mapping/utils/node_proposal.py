@@ -2,6 +2,7 @@
 This file defines the child class NodeProposal which inherits from the class Node
 """
 from mapping.utils.node import Node
+from docx.shared import Pt
 
 
 class NodeProposal(Node):
@@ -10,10 +11,12 @@ class NodeProposal(Node):
     specific to proposals.
     """
 
-    def __init__(self, title, body, children, supports):
+    def __init__(self, title, body, children, supports, nb_comments, category):
         Node.__init__(self, body, children)
         self.title = title
         self.supports = supports
+        self.nb_comments = nb_comments
+        self.category = category
 
     def write_txt(self, indent_num, file):
         """
@@ -24,9 +27,11 @@ class NodeProposal(Node):
         :param file: opened file cf- init_txt()
         """
         indent = 2 * indent_num * " "
-        file.write(indent + 'Titre : ' + self.title + '\n')
-        file.write(indent + 'Corps de contribution : ' + self.body + '\n')
-        file.write(indent + 'Soutiens : ' + str(self.supports) + '\n\n')
+        file.write(indent + 'Titre : ' + str(self.title) + '\n')
+        file.write(indent + 'Corps de contribution : ' + str(self.body) + '\n')
+        file.write(indent + 'Categorie : ' + str(self.category) + '\n')
+        file.write(indent + 'Soutiens : ' + str(self.supports) + '\n')
+        file.write(indent + 'Nombre de commentaires : ' + str(self.nb_comments) + '\n\n')
         for child in self.children:
             child.write_txt(indent_num + 1, file)
 
@@ -41,7 +46,38 @@ class NodeProposal(Node):
         """
         node_list.append(self.title)
         node_list.append(self.body)
+        node_list.append(self.category)
         node_list.append(self.supports)
+        node_list.append(self.nb_comments)
         for child in self.children:
             child.get_attributes_as_list(node_list)
         return node_list
+
+    def write_docx(self, indent_num, document):
+        """
+        This function will append all information stored in the proposal objects in a .docx file.
+        It will then iterate on the children to retrieve the comments
+        :param indent_num: indentation system for the structure
+        :type indent_num: float
+        :param document: document object
+        """
+        style = document.styles['Normal']
+        font = style.font
+        font.name = "Arial"
+        font.size = Pt(10)
+
+        title = document.add_heading(self.title, 2)
+        title.alignment = 1
+
+        paragraph = document.add_paragraph(self.body + '\n')
+        paragraph.style = document.styles['Normal']
+
+        paragraph.add_run("Categorie : ").bold = True
+        paragraph.add_run(str(self.category) + '\n')
+        paragraph.add_run("Soutiens : ").bold = True
+        paragraph.add_run(str(self.supports) + '\n')
+        paragraph.add_run("Nombre de commentaires : ").bold = True
+        paragraph.add_run(str(self.nb_comments) + '\n')
+
+        for child in self.children:
+            child.write_docx(indent_num + 0.05, document)

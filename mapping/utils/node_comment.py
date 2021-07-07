@@ -1,6 +1,8 @@
 """
 This file defines the child class NodeProposal which inherits from the class Node
 """
+import re
+from docx.shared import Inches
 from mapping.utils.node import Node
 
 
@@ -22,7 +24,7 @@ class NodeComment(Node):
         :param file: opened file cf- init_txt()
         """
         indent = 2 * indent_num * " "
-        file.write(indent + "Commentaire : " + self.body + '\n')
+        file.write(indent + "Commentaire : " + re.sub(r'\n', '\n{}'.format(indent), self.body) + '\n')
         for child in self.children:
             child.write_txt(indent_num + 1, file)
 
@@ -39,3 +41,19 @@ class NodeComment(Node):
         for child in self.children:
             child.get_attributes_as_list(node_list)
         return node_list
+
+    def write_docx(self, indent_num, document):
+        """
+        This function will append all information stored in the comment objects in a .docx file.
+        It will then iterate on the children to retrieve the comments
+        :param indent_num: indentation system for the structure
+        :type indent_num: float
+        :param document: document object
+        """
+        indent_num = 2*indent_num
+        paragraph = document.add_paragraph()
+        paragraph.add_run("Commentaire : ").bold = True
+        paragraph.add_run(str(self.body) + '\n')
+        paragraph.paragraph_format.left_indent = Inches(indent_num)
+        for child in self.children:
+            child.write_docx(indent_num + 0.05, document)

@@ -6,3 +6,6 @@ build:
 start:
 	@make build
 	docker run --rm -v ${PWD}/dist:/comments_mapping/dist python-mapping
+
+lint:
+	pylint ./**/*.py

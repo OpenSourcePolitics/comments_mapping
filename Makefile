@@ -8,7 +8,7 @@ start:
 	docker run --rm -v ${PWD}/dist:/comments_mapping/dist python-mapping
 
 test:
-	cd tests && pytest $(find **/*.py) --cov=. --cov-fail-under=90 && cd -
+	pytest $(tests/test_data_structure.py) --cov=. --cov-fail-under=90
 
 lint:
 	pylint ./**/*.py

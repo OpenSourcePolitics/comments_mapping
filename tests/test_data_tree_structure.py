@@ -3,8 +3,8 @@ Test data structure
 """
 import os
 
-import pytest
 import filecmp
+import pytest
 from mapping.data_manipulation import init_index, get_data, init_csv, init_txt
 from mapping.utils.node_proposal import NodeProposal
 from mapping.utils.node_comment import NodeComment
@@ -19,8 +19,8 @@ df_prop_config3, df_coms_config3 = get_data("./../test_data/comments_config3.xls
 
 def nodes_equal(node1, node2):
     is_equal = node1.body == node2.body
-    for childNode1, childNode2 in zip(node1.children, node2.children):
-        is_equal = is_equal and nodes_equal(childNode1, childNode2)
+    for child_node_1, child_node_2 in zip(node1.children, node2.children):
+        is_equal = is_equal and nodes_equal(child_node_1, child_node_2)
     return is_equal
 
 

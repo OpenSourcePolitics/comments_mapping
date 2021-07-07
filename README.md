@@ -7,7 +7,14 @@ Two output formats are expected : .txt and .csv
 - csv : all the information relative to a proposal is stored in a row
 
 Both of them will be stored in the directory ```/comments_mapping/dist```
-## Getting started 
+## Getting started
+
+### TLDR
+
+```
+make start
+```
+
 ### Requirements 
 - Docker
 - Python >= 3.8

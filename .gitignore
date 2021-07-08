@@ -129,5 +129,6 @@ dmypy.json
 
 dist/**/*.txt
 dist/**/*.csv
+dist/**/*.docx
 
 .idea

@@ -23,6 +23,14 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: ${{ env.PYTHON_VERSION }}
+      - name: debug
+        run: |
+          pwd
+          ls -la
+          ls -la dist
+          ls -la mapping
+          ls -la test_data
+          ls -la tests
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip

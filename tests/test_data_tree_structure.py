@@ -4,8 +4,11 @@ Test data structure
 import os
 
 import filecmp
+import difflib
+import docx
+import pandas as pd
 import pytest
-from mapping.data_manipulation import init_index, get_data, init_csv, init_txt
+from mapping.data_manipulation import init_index, get_data, init_csv, init_txt, init_docx, keep_fr_local
 from mapping.utils.node_proposal import NodeProposal
 from mapping.utils.node_comment import NodeComment
 
@@ -38,6 +41,24 @@ def nodes_equal(node1, node2):
     for child_node_1, child_node_2 in zip(node1.children, node2.children):
         is_equal = is_equal and nodes_equal(child_node_1, child_node_2)
     return is_equal
+
+
+def docx_comparison(path_file1, path_file2):
+    """
+    Function that will compare to docx file and store the differential in a list.
+    :param path_file1:  path to the file created by the program
+    :param path_file2: path to the file storing the expected format
+    """
+    file1 = docx.Document(path_file1)
+    file2 = docx.Document(path_file2)
+    para1 = ''
+    para2 = ''
+    for para in file1.paragraphs:
+        para1 = para1 + para.text + '\n'
+    for para in file2.paragraphs:
+        para2 = para2 + para.text + '\n'
+    differential = difflib.context_diff(para1.splitlines(), para2.splitlines(), fromfile="test.txt", tofile="test2.txt")
+    return list(differential)
 
 
 CONFIG_1 = [NodeProposal(title="P0 titre",
@@ -95,6 +116,13 @@ TEST_TXT_OUTPUT = [(df_prop_config1, df_coms_config1, os.path.join(TEST_PATH+'/.
                    (df_prop_config3, df_coms_config3, os.path.join(TEST_PATH+'/..',
                                                                    "test_data/mapping_result_config3.txt"))]
 
+TEST_DOCX_OUTPUT = [(df_prop_config1, df_coms_config1, os.path.join(TEST_PATH+"/..",
+                                                                    "test_data/mapping_result_config1.docx")),
+                    (df_prop_config2, df_coms_config2, os.path.join(TEST_PATH+"/..",
+                                                                    "test_data/mapping_result_config2.docx")),
+                    (df_prop_config3, df_coms_config3, os.path.join(TEST_PATH+"/..",
+                                                                    "test_data/mapping_result_config3.docx"))]
+
 
 @pytest.mark.parametrize("proposals_dataframe, comments_dataframe, output ", TEST_CASES_STRUCTURE)
 def test_tree_structure(proposals_dataframe, comments_dataframe, output):
@@ -139,3 +167,41 @@ def test_txt_integrity(proposals_dataframe, comments_dataframe, output):
     hash_prop = init_index(proposals_dataframe, comments_dataframe)
     init_txt(hash_prop)
     assert filecmp.cmp(os.path.join(dir_path, "../dist/mapping_proposals_comments.txt"), output)
+
+
+@pytest.mark.parametrize("proposals_dataframe, comments_dataframe, output", TEST_DOCX_OUTPUT)
+def test_docx_integrity(proposals_dataframe, comments_dataframe, output):
+    """
+    This function is used to test that all docx created by the program remains identical
+    to the expected configuration
+    :param proposals_dataframe: initial dataframe storing the proposals
+    :param comments_dataframe: initial dataframe storing the comments
+    :param output: handmade configuration used to validate the behavior of the function
+    """
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    hash_prop = init_index(proposals_dataframe, comments_dataframe)
+    init_docx(hash_prop)
+    diff = docx_comparison(os.path.join(dir_path, "../dist/mapping_proposals_comments.docx"), output)
+    assert len(diff) == 0
+
+
+def test_keep_fr():
+    """
+    Test the function responsible of renaming the columns in the dataframe
+    used to keep only french locale.
+    """
+    data = {'body/fr': ["lorem ipsum", "lorem ipsum"],
+            "body/en": ["lorem", "lorem"],
+            "category/name/fr": ["cat", "cat"],
+            "title/fr": ["lorem ipsum", "lorem ipsum"]}
+    dataframe = pd.DataFrame(data)
+    df_updated = keep_fr_local(dataframe)
+    assert set(list(df_updated.columns)) == {'body', 'body/en', "category", 'title'}
+
+
+def test_main():
+    """
+    Integration test which checks out that the execution flow is working properly
+    """
+    result = os.system("python {}/main.py".format(TEST_PATH+"/.."))
+    assert result == 0

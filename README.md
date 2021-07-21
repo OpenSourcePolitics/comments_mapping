@@ -48,9 +48,9 @@ You can also just investigate the directories and files with you usual file syst
 **Run on your own files**
 - add the files you want to map together in the directory : ```./comments_mapping/test_data ```
 - update the file called in main.py here : ```df_proposals, df_comments = get_data(os.path.join(os.getcwd(),
-                                                      "test_data/YOUR_COMMENTS_FILE.csv"),
+                                                      "root_path/YOUR_COMMENTS_FILE.csv"),
                                          os.path.join(os.getcwd(),
-                                                      "test_data/YOUR_PROPOSALS_FILE.csv"))```
+                                                      "root_path/YOUR_PROPOSALS_FILE.csv"))```
   
 Please note that if you do not have personal data to execute the script on you can use the three configurations available in 
 ```./test_data``` to see it in action. 
@@ -92,9 +92,6 @@ It means that you'll see the most commented proposals first. Use the instruction
     
 ### Next steps 
 - [ ] multilingual exports  
-- [ ] CI
-- [ ] Flask api 
-- [ ] local tests with postman
-- [ ] small interface
+- [x] CI
 
 

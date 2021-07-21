@@ -1,8 +1,8 @@
 """
 This file defines the child class NodeProposal which inherits from the class Node
 """
-from mapping.utils.node import Node
 from docx.shared import Pt
+from mapping.utils.node import Node
 
 
 class NodeProposal(Node):

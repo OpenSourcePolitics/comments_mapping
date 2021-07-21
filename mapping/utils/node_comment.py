@@ -28,20 +28,6 @@ class NodeComment(Node):
         for child in self.children:
             child.write_txt(indent_num + 1, file)
 
-    def get_attributes_as_list(self, node_list):
-        """
-        Function that will iterate from a proposal through all of its children to
-        retrieve the information stored in the object and append it successively to a list
-        :param node_list: list that will be progressively filled
-        :type node_list: list
-        :return: [proposal title, proposal body, comment 1, ..., comment n]
-        :rtype: list
-        """
-        node_list.append(self.body)
-        for child in self.children:
-            child.get_attributes_as_list(node_list)
-        return node_list
-
     def write_docx(self, indent_num, document):
         """
         This function will append all information stored in the comment objects in a .docx file.

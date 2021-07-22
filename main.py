@@ -2,7 +2,6 @@
 Execution of data_manipulation.py
 """
 import os
-import re
 from mapping.data_manipulation import init_index, init_txt, init_csv, init_docx, get_data
 
 if __name__ == '__main__':

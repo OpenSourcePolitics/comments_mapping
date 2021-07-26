@@ -26,7 +26,7 @@ make start
 - Docker
 - Python >= 3.8
 - Strongly recommended : a virtual environment manager
-- **Tolerated input extensions** : .csv (required separator is ;) / .xls
+- **Tolerated input extensions** : .csv (required separator : ```,```) / .xls
 
 ### Local and language management for proposals
 In multilingual proposal export you'll have several columns constructed as such body/*local* where *local* is a language identifier (en/fr etc). 

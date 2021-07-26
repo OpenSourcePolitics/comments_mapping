@@ -87,10 +87,10 @@ You'll just have to change the files called in the main as explained before.
 In order to ease your work on these files sort properties have also been implemented. 
 Thus, you'll be able to choose between to arguments to sort the order in which the proposals will be displayed. 
 In the function ```init_csv()```, ```init_txt()``` and ```init_docx()```, you can add an argument "sorting_attribute="
-- write **commentaires** if you want to display the proposals which received the higher number of comments 
+- write **comments** if you want to display the proposals which received the higher number of comments 
 - write **supports** if you want to see first the proposals which received the higher number of endorsements
 
-Additional Note : by default the proposals will be displayed as if the argument "commentaires" was passed to the function.
+Additional Note : by default the proposals will be displayed as if the argument "comments" was passed to the function.
 It means that you'll see the most commented proposals first. Use the instructions above to change this behaviour. 
 
 

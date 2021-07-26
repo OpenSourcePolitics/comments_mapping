@@ -24,17 +24,17 @@ def get_data(comment_file_path, proposal_file_path):
     _, file_extension_comments = os.path.splitext(comment_file_path)
     _, file_extension_proposals = os.path.splitext(proposal_file_path)
     if file_extension_comments == ".csv" and file_extension_proposals == ".csv":
-        df_coms = pd.read_csv(comment_file_path, sep=";", encoding="utf-8")
-        df_props = pd.read_csv(proposal_file_path, sep=";", encoding="utf-8")
+        df_coms = pd.read_csv(comment_file_path, sep=",", encoding="utf-8")
+        df_props = pd.read_csv(proposal_file_path, sep=",", encoding="utf-8")
     elif file_extension_comments == ".xls" and file_extension_proposals == ".xls":
         df_coms = pd.read_excel(comment_file_path)
         df_props = pd.read_excel(proposal_file_path)
     elif file_extension_comments == ".csv" and file_extension_proposals == ".xls":
-        df_coms = pd.read_csv(comment_file_path, sep=";", encoding="utf-8")
+        df_coms = pd.read_csv(comment_file_path, sep=",", encoding="utf-8")
         df_props = pd.read_excel(proposal_file_path)
     elif file_extension_comments == ".xls" and file_extension_proposals == ".csv":
         df_coms = pd.read_excel(comment_file_path)
-        df_props = pd.read_csv(proposal_file_path, sep=";", encoding="utf-8")
+        df_props = pd.read_csv(proposal_file_path, sep=",", encoding="utf-8")
     return df_props, df_coms
 
 
@@ -55,6 +55,20 @@ def keep_fr_local(df_props):
     return df_props
 
 
+def column_cleaning(df_props):
+    """
+    rename the column storing the supports into endorsements to deal
+    with the different versions of decidim
+    :param df_props: dataframe structure storing the proposals
+    :return:updated dataframe
+    """
+    df_props = keep_fr_local(df_props)
+    for column in df_props.columns:
+        if column.startswith("endorsements"):
+            df_props = df_props.rename(columns={column: "endorsements"})
+    return df_props
+
+
 def create_parent_prop(dataframe_prop, commentable_id, comment_object, hash_proposals):
     """
     Create a proposal parent Node when it is not already stored in HASH_PROP
@@ -68,7 +82,7 @@ def create_parent_prop(dataframe_prop, commentable_id, comment_object, hash_prop
     prop_node = NodeProposal(title=specific_row["title"].values[0],
                              body=specific_row["body"].values[0],
                              children=[comment_object],
-                             supports=specific_row["endorsements/total_count"].values[0],
+                             supports=specific_row["endorsements"].values[0],
                              nb_comments=specific_row["comments"].values[0],
                              category=specific_row["category"].values[0])
     hash_proposals[int(specific_row["id"].values[0])] = prop_node
@@ -101,7 +115,7 @@ def init_index(proposals_dataframe, comments_dataframe):
     :return: list storing all parent objects -> proposals object
     :rtype: list
     """
-    proposals_dataframe = keep_fr_local(proposals_dataframe)
+    proposals_dataframe = column_cleaning(proposals_dataframe)
     hash_proposals = {}
     hash_comments = {}
     for com in comments_dataframe.iterrows():

@@ -1,16 +1,16 @@
-NOUVELLE PROPOSITION
-Titre : P0 titre
-Corps de contribution : P0
-Categorie : cat
-Soutiens : 12
-Nombre de commentaires : 6
+NEW PROPOSAL
+Title : P0 titre
+Body : P0
+Category : cat
+Supports : 12
+Amount of comments : 6
 
-  Commentaire : C1
-    Commentaire : R1
-      Commentaire : R2
-        Commentaire : R3
-  Commentaire : C2
-    Commentaire : R4
+  Comment : C1
+    Comment : R1
+      Comment : R2
+        Comment : R3
+  Comment : C2
+    Comment : R4
 
 
 

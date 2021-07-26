@@ -24,7 +24,7 @@ class NodeComment(Node):
         :param file: opened file cf- init_txt()
         """
         indent = 2 * indent_num * " "
-        file.write(indent + "Commentaire : " + re.sub(r'\n', '\n{}'.format(indent), self.body) + '\n')
+        file.write(indent + "Comment : " + re.sub(r'\n', '\n{}'.format(indent), self.body) + '\n')
         for child in self.children:
             child.write_txt(indent_num + 1, file)
 
@@ -38,7 +38,7 @@ class NodeComment(Node):
         """
         indent_num = 2*indent_num
         paragraph = document.add_paragraph()
-        paragraph.add_run("Commentaire : ").bold = True
+        paragraph.add_run("Comment : ").bold = True
         paragraph.add_run(str(self.body) + '\n')
         paragraph.paragraph_format.left_indent = Inches(indent_num)
         for child in self.children:

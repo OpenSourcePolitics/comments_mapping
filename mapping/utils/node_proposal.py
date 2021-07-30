@@ -1,8 +1,8 @@
 """
 This file defines the child class NodeProposal which inherits from the class Node
 """
-from mapping.utils.node import Node
 from docx.shared import Pt
+from mapping.utils.node import Node
 
 
 class NodeProposal(Node):
@@ -27,11 +27,11 @@ class NodeProposal(Node):
         :param file: opened file cf- init_txt()
         """
         indent = 2 * indent_num * " "
-        file.write(indent + 'Titre : ' + str(self.title) + '\n')
-        file.write(indent + 'Corps de contribution : ' + str(self.body) + '\n')
-        file.write(indent + 'Categorie : ' + str(self.category) + '\n')
-        file.write(indent + 'Soutiens : ' + str(self.supports) + '\n')
-        file.write(indent + 'Nombre de commentaires : ' + str(self.nb_comments) + '\n\n')
+        file.write(indent + 'Title : ' + str(self.title) + '\n')
+        file.write(indent + 'Body : ' + str(self.body) + '\n')
+        file.write(indent + 'Category : ' + str(self.category) + '\n')
+        file.write(indent + 'Supports : ' + str(self.supports) + '\n')
+        file.write(indent + 'Amount of comments : ' + str(self.nb_comments) + '\n\n')
         for child in self.children:
             child.write_txt(indent_num + 1, file)
 
@@ -72,11 +72,11 @@ class NodeProposal(Node):
         paragraph = document.add_paragraph(self.body + '\n')
         paragraph.style = document.styles['Normal']
 
-        paragraph.add_run("Categorie : ").bold = True
+        paragraph.add_run("Category : ").bold = True
         paragraph.add_run(str(self.category) + '\n')
-        paragraph.add_run("Soutiens : ").bold = True
+        paragraph.add_run("Supports : ").bold = True
         paragraph.add_run(str(self.supports) + '\n')
-        paragraph.add_run("Nombre de commentaires : ").bold = True
+        paragraph.add_run("Amount of comments : ").bold = True
         paragraph.add_run(str(self.nb_comments) + '\n')
 
         for child in self.children:

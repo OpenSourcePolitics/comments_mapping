@@ -1,29 +1,29 @@
-NOUVELLE PROPOSITION
-Titre : P0 titre
-Corps de contribution : P0
-Categorie : cat
-Soutiens : 12
-Nombre de commentaires : 4
+NEW PROPOSAL
+Title : P0 titre
+Body : P0
+Category : cat
+Supports : 12
+Amount of comments : 4
 
-  Commentaire : C0
-  Commentaire : C1
-  Commentaire : C2
-  Commentaire : C3
-
-
+  Comment : C0
+  Comment : C1
+  Comment : C2
+  Comment : C3
 
 
 
 
 
-NOUVELLE PROPOSITION
-Titre : P1 titre
-Corps de contribution : P1
-Categorie : cat
-Soutiens : 5
-Nombre de commentaires : 1
 
-  Commentaire : C4
+
+NEW PROPOSAL
+Title : P1 titre
+Body : P1
+Category : cat
+Supports : 5
+Amount of comments : 1
+
+  Comment : C4
 
 
 

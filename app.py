@@ -1,15 +1,25 @@
-from flask import Flask, jsonify, request, send_file
+"""
+Project API
+"""
+import os
 from functools import wraps
+from flask import Flask, jsonify, request, send_file
+from main import map_comments_with_proposals
 
-from main import main
 
+API_PATH = os.path.split(os.path.realpath(__file__))[0]
 app = Flask(__name__)
 
 
 def check_data(func):
+    """
+    decorator function used to check that the data is not null or invalid
+    :param func: function on which the decorator is called
+    :return:
+    """
     @wraps(func)
     def wrapped(*args, **kwargs):
-        data = request.get_json(),
+        data = request.get_json()
         if data is None:
             return jsonify({'message': 'Invalid data'}), 403
         return func(*args, **kwargs)
@@ -19,12 +29,18 @@ def check_data(func):
 @app.route('/', methods=["POST"])
 @check_data
 def index():
+    """
+    This function get a json file transmitted by the
+    client with a POST request.
+    It then returns an archive containing the outputs of the script
+    :return: Send the contents of a file to the client. see send_file documentation
+    for further information
+    """
     sorting_attribute = request.args['sorting_attribute']
     data = request.get_json()
 
     try:
-        import pdb; pdb.set_trace()
-        main(data, sorting_attribute)
+        map_comments_with_proposals(data, sorting_attribute)
     except Exception:
         return jsonify(
             {'message': 'Error executing script'}

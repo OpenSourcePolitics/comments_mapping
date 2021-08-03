@@ -8,4 +8,7 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
-CMD python ./main.py
+EXPOSE 8080
+ENV PORT 8080
+
+CMD flask run -p 8080

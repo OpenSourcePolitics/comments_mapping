@@ -4,7 +4,7 @@ Execution of data_manipulation.py
 import os
 from mapping.data_manipulation import init_index, init_txt, init_csv, init_docx, get_data
 
-if __name__ == '__main__':
+def main(sorting_attribute=None):
     main_path = os.path.realpath(__file__)
     root_path = os.path.split(main_path)[0]
     df_proposals, df_comments = get_data(os.path.join(root_path,
@@ -15,3 +15,5 @@ if __name__ == '__main__':
     init_csv(hsh_prop)
     init_txt(hsh_prop, sorting_attribute="supports")
     init_docx(hsh_prop, sorting_attribute="supports")
+
+main()

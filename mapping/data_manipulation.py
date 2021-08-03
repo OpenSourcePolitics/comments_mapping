@@ -10,32 +10,13 @@ from mapping.utils.node_proposal import NodeProposal
 from mapping.utils.node_comment import NodeComment
 
 
-def get_data(comment_file_path, proposal_file_path):
+def get_data(json_object, proposal_file_key, comment_file_key):
     """
-    This function is a temporary. It deals with file reading and convert it to a pandas dataframe
-    used in tests and for local execution
-    :param comment_file_path: path to the comment file
-    :type comment_file_path: str
-    :param proposal_file_path: path to the proposal file
-    :type proposal_file_path: str
-    :return: two dataframes : one storing the proposal and the other storing the comments
-    :rtype: tuple
+    Parse a json object to retrieve the proposal data and the comment data
     """
-    _, file_extension_comments = os.path.splitext(comment_file_path)
-    _, file_extension_proposals = os.path.splitext(proposal_file_path)
-    if file_extension_comments == ".csv" and file_extension_proposals == ".csv":
-        df_coms = pd.read_csv(comment_file_path, sep=",", encoding="utf-8")
-        df_props = pd.read_csv(proposal_file_path, sep=",", encoding="utf-8")
-    elif file_extension_comments == ".xls" and file_extension_proposals == ".xls":
-        df_coms = pd.read_excel(comment_file_path)
-        df_props = pd.read_excel(proposal_file_path)
-    elif file_extension_comments == ".csv" and file_extension_proposals == ".xls":
-        df_coms = pd.read_csv(comment_file_path, sep=",", encoding="utf-8")
-        df_props = pd.read_excel(proposal_file_path)
-    elif file_extension_comments == ".xls" and file_extension_proposals == ".csv":
-        df_coms = pd.read_excel(comment_file_path)
-        df_props = pd.read_csv(proposal_file_path, sep=",", encoding="utf-8")
-    return df_props, df_coms
+    df_proposals = pd.DataFrame.from_dict(json_object[proposal_file_key], orient='index')
+    df_comments = pd.DataFrame.from_dict(json_object[comment_file_key], orient='index')
+    return df_proposals, df_comments
 
 
 def keep_fr_local(df_props):

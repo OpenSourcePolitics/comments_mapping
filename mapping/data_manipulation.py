@@ -10,12 +10,12 @@ from mapping.utils.node_proposal import NodeProposal
 from mapping.utils.node_comment import NodeComment
 
 
-def get_data(json_object, proposal_file_key, comment_file_key):
+def get_data(json_object):
     """
     Parse a json object to retrieve the proposal data and the comment data
     """
-    df_proposals = pd.DataFrame.from_dict(json_object[proposal_file_key], orient='index')
-    df_comments = pd.DataFrame.from_dict(json_object[comment_file_key], orient='index')
+    df_proposals = pd.DataFrame.from_dict(json_object["proposals_file"], orient='index')
+    df_comments = pd.DataFrame.from_dict(json_object["comments_file"], orient='index')
     return df_proposals, df_comments
 
 

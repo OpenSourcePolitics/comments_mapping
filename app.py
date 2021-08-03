@@ -1,22 +1,30 @@
 from flask import Flask, jsonify, request, send_file
 from functools import wraps
-import os
 
 from main import main
 
 app = Flask(__name__)
 
 
-@app.route('/', methods=['POST'])
-def index():
-    args = request.args
-    sorting_attribute = request.args['sorting_attribute']
-    output_format = request.args['output_format']
+def check_data(func):
+    @wraps(func)
+    def wrapped(*args, **kwargs):
+        data = request.get_json(),
+        if data is None:
+            return jsonify({'message': 'Invalid data'}), 403
+        return func(*args, **kwargs)
+    return wrapped
 
-    data = request.data
+
+@app.route('/', methods=["POST"])
+@check_data
+def index():
+    sorting_attribute = request.args['sorting_attribute']
+    data = request.get_json()
+
     try:
-        
-        main(sorting_attribute)
+        import pdb; pdb.set_trace()
+        main(data, sorting_attribute)
     except Exception:
         return jsonify(
             {'message': 'Error executing script'}
@@ -24,12 +32,11 @@ def index():
     parsed_file = open('./dist/mapping_proposals_comments.csv', 'rb')
     return send_file(
         parsed_file,
-        f"application/{output_format}",
+        "application/zip",
         as_attachment=True,
         attachment_filename="mapping_file"
     )
 
 
-# if __name__ == "__main__":
-#     from waitress import serve
-#     serve(app, host="0.0.0.0", port=os.environ["PORT"])
+if __name__ == "__main__":
+    app.run()

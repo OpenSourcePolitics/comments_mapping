@@ -17,12 +17,18 @@ def prepare_archive():
     dir_path = os.path.join(MAIN_PATH, "dist")
     files = os.listdir(dir_path)
     files.remove('.gitkeep')
-    with ZipFile("comments_mapping_outputs.zip", "w") as new_zip:
+    with ZipFile(os.path.join(MAIN_PATH, "dist/comments_mapping_outputs.zip"), "w", zipfile.ZIP_DEFLATED) as new_zip:
         for file in files:
             new_zip.write(os.path.relpath(os.path.join(dir_path, file)))
 
 
 def map_comments_with_proposals(json_object, sorting_attribute=None):
+    """
+    Main execution function : initialize all resources
+    :param json_object:
+    :param sorting_attribute:
+    :return:
+    """
     df_proposals, df_comments = get_data(json_object)
     hsh_prop = init_index(proposals_dataframe=df_proposals, comments_dataframe=df_comments)
     init_csv(hsh_prop)

@@ -45,10 +45,10 @@ def index():
         return jsonify(
             {'message': 'Error executing script'}
         ), 403
-    parsed_file = open('./dist/mapping_proposals_comments.csv', 'rb')
+    parsed_file = os.path.join(API_PATH, 'dist/comments_mapping_outputs.zip')
     return send_file(
-        parsed_file,
-        "application/zip",
+        path_or_file=parsed_file,
+        mimetype="application/zip",
         as_attachment=True,
         attachment_filename="mapping_file"
     )

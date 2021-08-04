@@ -46,7 +46,7 @@ def get_data(post_request_json_object=None, local_json_file_path=None):
     :rtype: tuple
     """
     if post_request_json_object is None:
-        post_request_json_object = read_local_json_object(local_json_file_path)
+        post_request_json_object = read_local_json_data(local_json_file_path)
     df_proposals = pd.DataFrame.from_dict(post_request_json_object["proposals_file"], orient='index')
     df_comments = pd.DataFrame.from_dict(post_request_json_object["comments_file"], orient='index')
     return df_proposals, df_comments

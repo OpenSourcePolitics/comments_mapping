@@ -34,7 +34,8 @@ def map_comments_with_proposals(post_request_result=None, local_json_data_path=N
     must be sorted in the output either by number of comments or by number of supports.
     :type sorting_attribute: str
     """
-    df_proposals, df_comments = get_data(post_request_json_object=post_request_result, local_json_file_path=local_json_data_path)
+    df_proposals, df_comments = get_data(post_request_json_object=post_request_result,
+                                         local_json_file_path=local_json_data_path)
     hsh_prop = init_index(proposals_dataframe=df_proposals, comments_dataframe=df_comments)
     init_csv(hsh_prop)
     init_txt(hsh_prop, sorting_attribute=sorting_attribute)

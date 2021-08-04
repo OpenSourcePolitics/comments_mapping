@@ -19,7 +19,6 @@ def empty_dist_directory(response):
     :param response:
     :return:
     """
-    print(response)
     former_files = glob.glob(os.path.join(API_PATH, "dist/*"))
     for file in former_files:
         os.remove(file)

@@ -2,13 +2,28 @@
 Project API
 """
 import os
+import glob
 from functools import wraps
 from flask import Flask, jsonify, request, send_file
 from main import map_comments_with_proposals
 
-
 API_PATH = os.path.split(os.path.realpath(__file__))[0]
 app = Flask(__name__)
+
+
+@app.teardown_request
+def empty_dist_directory(response):
+    """
+    Function that will be called after the request
+    to clean the dist directory
+    :param response:
+    :return:
+    """
+    print(response)
+    former_files = glob.glob(os.path.join(API_PATH, "dist/*"))
+    for file in former_files:
+        os.remove(file)
+    return response
 
 
 def check_data(func):
@@ -38,7 +53,6 @@ def index():
     """
     sorting_attribute = request.args['sorting_attribute']
     data = request.get_json()
-
     try:
         map_comments_with_proposals(data, sorting_attribute)
     except Exception:

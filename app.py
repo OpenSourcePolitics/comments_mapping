@@ -5,6 +5,7 @@ import os
 import glob
 from functools import wraps
 from flask import Flask, jsonify, request, send_file
+from mapping.utils.utils_functions import clean_directory
 from main import map_comments_with_proposals
 
 API_PATH = os.path.split(os.path.realpath(__file__))[0]
@@ -19,9 +20,7 @@ def empty_dist_directory(response):
     :param response:
     :return:
     """
-    former_files = glob.glob(os.path.join(API_PATH, "dist/*"))
-    for file in former_files:
-        os.remove(file)
+    clean_directory(os.path.join(API_PATH, "dist"))
     return response
 
 

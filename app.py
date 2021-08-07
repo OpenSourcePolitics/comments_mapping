@@ -2,9 +2,10 @@
 Project API
 """
 import os
-import glob
+import sys
+import traceback
 from functools import wraps
-from flask import Flask, jsonify, request, send_file
+from flask import Flask, jsonify, request, send_file, make_response
 from mapping.utils.utils_functions import clean_directory
 from main import map_comments_with_proposals
 
@@ -53,17 +54,23 @@ def index():
     data = request.get_json()
     try:
         map_comments_with_proposals(data, sorting_attribute)
-    except Exception:
+    except Exception as execution_error:
+        print(type(execution_error))
+        print(execution_error.args)
+        traceback.print_exc(file=sys.stdout)
+        print(execution_error)
         return jsonify(
             {'message': 'Error executing script'}
         ), 403
     parsed_file = os.path.join(API_PATH, 'dist/comments_mapping_outputs.zip')
-    return send_file(
+    response = make_response(send_file(
         path_or_file=parsed_file,
         mimetype="application/zip",
         as_attachment=True,
-        attachment_filename="mapping_file"
-    )
+        download_name="mapping_file"
+    ))
+    response.headers['Content-Disposition'] = "attachment; filename=mapping_file"
+    return response
 
 
 if __name__ == "__main__":

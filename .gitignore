@@ -132,3 +132,5 @@ dist/**/*.csv
 dist/**/*.docx
 
 .idea
+bin/
+pyvenv.cfg

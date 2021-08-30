@@ -1,5 +1,7 @@
 FROM python:3.8
 
+ENV PYTHONUNBUFFERED 1
+
 WORKDIR /comments_mapping
 
 COPY requirements.txt .
@@ -8,4 +10,8 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
-CMD python ./main.py
+EXPOSE 8080
+
+ENV PORT 8080
+
+CMD flask run --host=0.0.0.0 -p $PORT

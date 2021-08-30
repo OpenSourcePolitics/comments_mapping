@@ -11,12 +11,14 @@ class NodeProposal(Node):
     specific to proposals.
     """
 
+    # pylint: disable=too-many-arguments
     def __init__(self, title, body, children, supports, nb_comments, category):
         Node.__init__(self, body, children)
         self.title = title
         self.supports = supports
         self.nb_comments = nb_comments
         self.category = category
+    # pylint: enable=too-many-arguments
 
     def write_txt(self, indent_num, file):
         """

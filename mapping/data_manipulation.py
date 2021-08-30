@@ -27,7 +27,7 @@ def read_local_json_data(json_file_path):
     :return: dictionary storing the data
     :rtype: dict
     """
-    with open(json_file_path) as json_file:
+    with open(json_file_path, encoding="utf-8") as json_file:
         data = json.load(json_file)
     return data
 
@@ -212,7 +212,7 @@ def init_csv(hash_proposals, sorting_attribute=None):
         if os.path.basename(os.path.normpath(DATA_MANIPULATION_PATH)) != "comments_mapping":
             os.chdir('..')
         with open(os.path.join(DATA_MANIPULATION_PATH, "../dist/mapping_proposals_comments.csv"),
-                  'w', newline="") as file:
+                  'w', newline="", encoding="utf-8") as file:
             writer = csv.writer(file)
             writer.writerows(row_list)
 

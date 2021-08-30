@@ -4,11 +4,10 @@ name: Deploy Image to registry
 on:
   push:
     branches:
-      - develop
+      - main
   pull_request:
     branches:
-      - develop
-      - master
+      - main
 
 jobs:
   build:

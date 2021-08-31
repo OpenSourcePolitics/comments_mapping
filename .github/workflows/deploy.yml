@@ -1,0 +1,28 @@
+---
+name: Deploy Image to registry
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build & Push Image
+        run: |
+          docker login ${{ secrets.REGISTRY_ENDPOINT }} -u userdoesnotmatter -p ${{ secrets.TOKEN }}
+          docker build . --compress --tag ${{ secrets.TAG }}
+          docker push ${{ secrets.TAG }}
+      - name: Deploy container
+        run: |
+          CONTAINER_ID=$(sed -e 's/^"//' -e 's/"$//' <<<$(curl -X GET -H "X-Auth-Token: ${{ secrets.TOKEN}}" "https://api.scaleway.com/containers/v1beta1/regions/fr-par/containers/" | jq -e '.containers[] | select(.name|test("${{ secrets.NAME }}"))'.id))
+          curl \
+            -X POST \
+            -H "X-Auth-Token: ${{ secrets.TOKEN }}" \
+            -d "{}" \
+            "https://api.scaleway.com/containers/${{ secrets.SCW_API_VERSION }}/regions/fr-par/containers/$CONTAINER_ID/deploy" \
+            | jq 'del(."environment_variables")'

@@ -16,7 +16,7 @@ def prepare_archive():
     """
     dir_path = os.path.join(MAIN_PATH, "dist")
     files = os.listdir(dir_path)
-    files.remove('.gitkeep')
+
     with ZipFile(os.path.join(MAIN_PATH, "dist/comments_mapping_outputs.zip"), "w", zipfile.ZIP_DEFLATED) as new_zip:
         for file in files:
             new_zip.write(os.path.relpath(os.path.join(dir_path, file)))

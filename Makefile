@@ -2,10 +2,13 @@ PWD=$(shell pwd)
 PORT := 8080
 REGION := fr-par
 REGISTRY_ENDPOINT := rg.$(REGION).scw.cloud
-REGISTRY_NAMESPACE := funcscwcommentsmappingrunfr6bt
+REGISTRY_NAMESPACE := osp-internal-tools
 IMAGE_NAME := comments_mapping
 VERSION := latest
 TAG := $(REGISTRY_ENDPOINT)/$(REGISTRY_NAMESPACE)/$(IMAGE_NAME):$(VERSION)
+
+login:
+	docker login $(REGISTRY_ENDPOINT) -u userdoesnotmatter -p $(SCALEWAY_TOKEN)
 
 build:
 	docker build -t python-mapping . --compress --tag $(TAG)
@@ -17,6 +20,7 @@ push:
 	docker push $(TAG)
 
 deploy:
+	@make login
 	@make build
 	@make push
 

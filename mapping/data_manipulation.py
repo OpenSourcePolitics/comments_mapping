@@ -2,40 +2,54 @@
 Create a data structure based on an hierarchical tree to map the comments and the
 proposals of two distinct csv like files
 """
-import csv
 import os
+import csv
+import json
 import docx
 import pandas as pd
 from mapping.utils.node_proposal import NodeProposal
 from mapping.utils.node_comment import NodeComment
 
+DATA_MANIPULATION_PATH = os.path.split(os.path.realpath(__file__))[0]
 
-def get_data(comment_file_path, proposal_file_path):
+
+def read_local_json_data(json_file_path):
     """
-    This function is a temporary. It deals with file reading and convert it to a pandas dataframe
-    used in tests and for local execution
-    :param comment_file_path: path to the comment file
-    :type comment_file_path: str
-    :param proposal_file_path: path to the proposal file
-    :type proposal_file_path: str
-    :return: two dataframes : one storing the proposal and the other storing the comments
+    Used to read json file saved locally containing the data as such :
+    {
+    "proposals_file": {PROPOSAL_DATA},
+    "comments_file": {COMMENTS_DATA},
+    }
+    This function loads the content and returns it to be parsed by
+    other functions.
+    :param json_file_path: path to the data to be mapped
+    :type json_file_path: str
+    :return: dictionary storing the data
+    :rtype: dict
+    """
+    with open(json_file_path, encoding="utf-8") as json_file:
+        data = json.load(json_file)
+    return data
+
+
+def get_data(post_request_json_object=None, local_json_file_path=None):
+    """
+    Parse a json object to retrieve the proposal data and the comment data. Can be used
+    to parse either the result of a post request (json) send by the client or to parse
+    local data.
+    In either way the data should be formatted in the same way.
+    :param post_request_json_object: result of the post request received by the API
+    :type post_request_json_object: dict
+    :param local_json_file_path: path to the local data to be loaded and parsed
+    :type local_json_file_path: str
+    :return: tuple of pandas dataframe storing first the proposals and then the comments
     :rtype: tuple
     """
-    _, file_extension_comments = os.path.splitext(comment_file_path)
-    _, file_extension_proposals = os.path.splitext(proposal_file_path)
-    if file_extension_comments == ".csv" and file_extension_proposals == ".csv":
-        df_coms = pd.read_csv(comment_file_path, sep=",", encoding="utf-8")
-        df_props = pd.read_csv(proposal_file_path, sep=",", encoding="utf-8")
-    elif file_extension_comments == ".xls" and file_extension_proposals == ".xls":
-        df_coms = pd.read_excel(comment_file_path)
-        df_props = pd.read_excel(proposal_file_path)
-    elif file_extension_comments == ".csv" and file_extension_proposals == ".xls":
-        df_coms = pd.read_csv(comment_file_path, sep=",", encoding="utf-8")
-        df_props = pd.read_excel(proposal_file_path)
-    elif file_extension_comments == ".xls" and file_extension_proposals == ".csv":
-        df_coms = pd.read_excel(comment_file_path)
-        df_props = pd.read_csv(proposal_file_path, sep=",", encoding="utf-8")
-    return df_props, df_coms
+    if post_request_json_object is None:
+        post_request_json_object = read_local_json_data(local_json_file_path)
+    df_proposals = pd.DataFrame.from_dict(post_request_json_object["Proposals"], orient='index')
+    df_comments = pd.DataFrame.from_dict(post_request_json_object["Comments"], orient='index')
+    return df_proposals, df_comments
 
 
 def keep_fr_local(df_props):
@@ -171,7 +185,7 @@ def init_txt(hash_proposals, sorting_attribute=None):
     if sorting_attribute is None:
         sorting_attribute = "comments"
     sorted_hash_proposals = sort_proposal_objects(hash_proposals, sorting_attribute=sorting_attribute)
-    with open(os.path.join(os.getcwd(), "dist/mapping_proposals_comments.txt"),
+    with open(os.path.join(DATA_MANIPULATION_PATH, "../dist/mapping_proposals_comments.txt"),
               'w', encoding="utf-8") as txt_file:
         for proposal in sorted_hash_proposals:
             txt_file.write("NEW PROPOSAL\n")
@@ -195,10 +209,10 @@ def init_csv(hash_proposals, sorting_attribute=None):
     for proposal in sorted_hash_proposals:
         node_list = []
         row_list.append(proposal.get_attributes_as_list(node_list))
-        if os.path.basename(os.path.normpath(os.getcwd())) != "comments_mapping":
+        if os.path.basename(os.path.normpath(DATA_MANIPULATION_PATH)) != "comments_mapping":
             os.chdir('..')
-        with open(os.path.join(os.getcwd(), "dist/mapping_proposals_comments.csv"),
-                  'w', newline="") as file:
+        with open(os.path.join(DATA_MANIPULATION_PATH, "../dist/mapping_proposals_comments.csv"),
+                  'w', newline="", encoding="utf-8") as file:
             writer = csv.writer(file)
             writer.writerows(row_list)
 
@@ -213,11 +227,11 @@ def init_docx(hash_proposals, sorting_attribute=None):
     :param hash_proposals: list of parent objects
     :param sorting_attribute: either "supports" or "comments"
     """
-    if sorting_attribute is None :
+    if sorting_attribute is None:
         sorting_attribute = "comments"
     sorted_hash_proposals = sort_proposal_objects(hash_proposals, sorting_attribute=sorting_attribute)
     document = docx.Document()
     for proposal in sorted_hash_proposals:
         proposal.write_docx(0, document)
         document.add_page_break()
-    document.save(os.path.join(os.getcwd(), "dist/mapping_proposals_comments.docx"))
+    document.save(os.path.join(DATA_MANIPULATION_PATH, "../dist/mapping_proposals_comments.docx"))

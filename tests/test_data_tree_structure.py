@@ -14,18 +14,12 @@ from mapping.utils.node_comment import NodeComment
 
 TEST_PATH = os.path.split(os.path.realpath(__file__))[0]
 
-df_prop_config1, df_coms_config1 = get_data(os.path.join(TEST_PATH+'/..',
-                                                         "test_data/comments_config1.xls"),
-                                            os.path.join(TEST_PATH+'/..',
-                                                         "test_data/proposals_config1.xls"))
-df_prop_config2, df_coms_config2 = get_data(os.path.join(TEST_PATH+'/..',
-                                                         "test_data/comments_config2.xls"),
-                                            os.path.join(TEST_PATH+'/..',
-                                                         "test_data/proposals_config2.xls"))
-df_prop_config3, df_coms_config3 = get_data(os.path.join(TEST_PATH+'/..',
-                                                         "test_data/comments_config3.xls"),
-                                            os.path.join(TEST_PATH+'/..',
-                                                         "test_data/proposals_config3.xls"))
+df_prop_config1, df_coms_config1 = get_data(local_json_file_path=os.path.join(TEST_PATH,
+                                                                              "../test_data/test_config_1.json"))
+df_prop_config2, df_coms_config2 = get_data(local_json_file_path=os.path.join(TEST_PATH,
+                                                                              "../test_data/test_config_2.json"))
+df_prop_config3, df_coms_config3 = get_data(local_json_file_path=os.path.join(TEST_PATH,
+                                                                              "../test_data/test_config_3.json"))
 
 
 def nodes_equal(node1, node2):
@@ -197,11 +191,3 @@ def test_keep_fr():
     dataframe = pd.DataFrame(data)
     df_updated = keep_fr_local(dataframe)
     assert set(list(df_updated.columns)) == {'body', 'body/en', "category", 'title'}
-
-
-def test_main():
-    """
-    Integration test which checks out that the execution flow is working properly
-    """
-    result = os.system("python {}/main.py".format(TEST_PATH+"/.."))
-    assert result == 0

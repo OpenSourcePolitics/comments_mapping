@@ -12,26 +12,6 @@ from mapping.utils.node_comment import NodeComment
 
 DATA_MANIPULATION_PATH = os.path.split(os.path.realpath(__file__))[0]
 
-
-def read_local_json_data(json_file_path):
-    """
-    Used to read json file saved locally containing the data as such :
-    {
-    "proposals_file": {PROPOSAL_DATA},
-    "comments_file": {COMMENTS_DATA},
-    }
-    This function loads the content and returns it to be parsed by
-    other functions.
-    :param json_file_path: path to the data to be mapped
-    :type json_file_path: str
-    :return: dictionary storing the data
-    :rtype: dict
-    """
-    with open(json_file_path, encoding="utf-8") as json_file:
-        data = json.load(json_file)
-    return data
-
-
 def get_data(post_request_json_object=None, local_json_file_path=None):
     """
     Parse a json object to retrieve the proposal data and the comment data. Can be used

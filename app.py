@@ -6,9 +6,8 @@ import sys
 import traceback
 from functools import wraps
 from flask import Flask, jsonify, request, send_file, make_response
-from mapping.utils.utils_functions import clean_directory
+import mapping.utils.utils_functions as utils
 from main import map_comments_with_proposals
-import settings.settings as settings
 
 API_PATH = os.path.split(os.path.realpath(__file__))[0]
 app = Flask(__name__)
@@ -22,7 +21,7 @@ def empty_dist_directory(response):
     :param response:
     :return:
     """
-    clean_directory(os.path.join(API_PATH, "dist"))
+    utils.clear_directory(os.path.join(API_PATH, "dist"))
     return response
 
 
@@ -36,7 +35,7 @@ def check_data(func):
     def wrapped(*args, **kwargs):
         data = request.get_json()
         if data is None:
-            return api_response("invalid_data")
+            return utils.api_response("invalid_data")
 
         return func(*args, **kwargs)
     return wrapped
@@ -70,22 +69,15 @@ def index():
             download_name="mapping_file"
         ))
         response.headers['Content-Disposition'] = "attachment; filename=mapping_file"
-
         return response
+
     except Exception as execution_error:
         print(type(execution_error))
-        traceback.print_exc(file=sys.stdout)
         print(execution_error)
+        traceback.print_exc(file=sys.stdout)
 
-        return api_response("internal")
+        return utils.api_response("internal")
 
 
 if __name__ == "__main__":
     app.run()
-
-
-def api_response(error):
-    if error in settings.ERRORS:
-        return jsonify(settings.ERRORS[error]["response"]), settings.ERRORS[error]["code"]
-
-    return jsonify(settings.ERRORS["internal"]["response"]), settings.ERRORS["internal"]["code"]

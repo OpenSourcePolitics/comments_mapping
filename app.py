@@ -50,7 +50,12 @@ def index():
     :return: Send the contents of a file to the client. see send_file documentation
     for further information
     """
-    sorting_attribute = request.args['sorting_attribute']
+
+    if 'sorting_attribute' in request.args:
+        sorting_attribute = request.args['sorting_attribute']
+    else:
+        sorting_attribute = "supports"
+
     data = request.get_json()
     try:
         map_comments_with_proposals(data, sorting_attribute)

@@ -1,0 +1,75 @@
+{
+  "title": "Document validation for comments mapping",
+  "description": "A document stores two Decidim output files that need to be mapped : proposals and comments",
+  "type": "object",
+  "properties": {
+    "Proposals": {
+      "description": "Stores the rows of the initial csv / xls file as a dictionary oriented by index",
+      "type": "object",
+      "patternProperties": {
+        "\\d+": {
+          "type": "object",
+          "patternProperties": {
+            "^(id)$": {
+              "description": "Proposal identifier",
+              "type": "integer"
+            },
+            "^(title|title/fr)$": {
+              "description": "Proposal title",
+              "type": "string"
+            },
+            "^(body|body/fr)$": {
+              "description": "Proposal content",
+              "type": "string"
+            },
+            "^(endorsements/total_count|endorsements)$": {
+              "description": "Number of supports received by the proposal",
+              "type": "integer"
+            },
+            "^(comments)$": {
+              "description": "Number of comments associated with the proposal",
+              "type": "integer"
+            },
+            "^(category/name/fr|category)$": {
+              "description": "Decidim build in categories defined with the client",
+              "type": "string"
+            }
+          },
+          "minProperties": 6
+        }
+      }
+    },
+    "Comments": {
+      "description": "Stores the comments associated with the proposals as rows.",
+      "type": "object",
+      "patternProperties": {
+        "\\d+": {
+          "type": "object",
+          "patternProperties": {
+            "^(id)$": {
+              "description": "Unique identifier of the comment",
+              "type": "integer"
+            },
+            "^(body|body/fr)$":{
+              "description": "Comments content",
+              "type": "string"
+            },
+            "^(depth)$": {
+              "description": "Indentation of the comment in the global feed",
+              "type": "integer"
+            },
+            "^(commentable_id)$":{
+              "description": "Identifier of a proposal or a comment to which the current comment is associated",
+              "type": "integer"
+            }
+          },
+          "minProperties": 4
+        }
+      }
+    }
+  },
+  "required": [
+    "Proposals",
+    "Comments"
+  ]
+}

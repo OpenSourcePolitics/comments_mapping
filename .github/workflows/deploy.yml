@@ -1,10 +1,10 @@
 ---
-name: Deploy Image to registry
+name: Deploy Development Image to registry
 
 on:
   push:
     branches:
-      - main
+      - develop
 
 jobs:
   build:
@@ -15,8 +15,8 @@ jobs:
       - name: Build & Push Image
         run: |
           docker login ${{ secrets.REGISTRY_ENDPOINT }} -u userdoesnotmatter -p ${{ secrets.TOKEN }}
-          docker build . --compress --tag "${{ secrets.REGISTRY_ENDPOINT }}/${{ secrets.REGISTRY_NAMESPACE }}/${{ secrets.IMAGE_NAME }}:${{ secrets.PRODUCTION_TAG }}"
-          docker push "${{ secrets.REGISTRY_ENDPOINT }}/${{ secrets.REGISTRY_NAMESPACE }}/${{ secrets.IMAGE_NAME }}:${{ secrets.PRODUCTION_TAG }}"
+          docker build . --compress --tag "${{ secrets.REGISTRY_ENDPOINT }}/${{ secrets.REGISTRY_NAMESPACE }}/${{ secrets.IMAGE_NAME }}:${{ secrets.DEVELOPMENT_TAG }}"
+          docker push "${{ secrets.REGISTRY_ENDPOINT }}/${{ secrets.REGISTRY_NAMESPACE }}/${{ secrets.IMAGE_NAME }}:${{ secrets.DEVELOPMENT_TAG }}"
       - name: Deploy container
         run: |
           CONTAINER_ID=$(sed -e 's/^"//' -e 's/"$//' <<<$(curl -X GET -H "X-Auth-Token: ${{ secrets.TOKEN}}" "https://api.scaleway.com/containers/v1beta1/regions/fr-par/containers/" | jq -e '.containers[] | select(.name|test("${{ secrets.CONTAINER_NAME }}"))'.id))

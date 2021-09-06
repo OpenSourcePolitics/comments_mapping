@@ -1,11 +1,10 @@
 name: "[CI] Tests"
 
 on:
-  push:
+  pull_request:
     branches:
       - develop
       - main
-  pull_request:
     branches-ignore:
       - "chore"
 

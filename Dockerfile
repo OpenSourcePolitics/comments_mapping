@@ -1,9 +1,10 @@
 FROM python:3.8
 
-# Disable pyc files written by Python 
-ENV PYTHONDONTWRITEBYTECODE 1
-# Disable buffering stdout and stderr
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONUNBUFFERED=1\
+PORT=8080\
+FLASK_ENV=production
+
+EXPOSE $PORT
 
 WORKDIR /comments_mapping
 
@@ -13,9 +14,5 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
-EXPOSE 8080
 
-ENV PORT 8080
-ENV FLASK_ENV=production
-
-CMD gunicorn --bind 0.0.0.0:$PORT wsgi:app
+CMD gunicorn --bind 0.0.0.0:$PORT --access-logfile - --error-logfile - --log-level debug wsgi:app

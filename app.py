@@ -8,8 +8,17 @@ from functools import wraps
 from flask import Flask, jsonify, request, send_file, make_response
 from mapping.utils.utils_functions import clean_directory
 from main import map_comments_with_proposals
+import sentry_sdk
+from sentry_sdk.integrations.flask import FlaskIntegration
 
 API_PATH = os.path.split(os.path.realpath(__file__))[0]
+
+sentry_sdk.init(
+    dsn=os.environ.get('SENTRY_DSN'),
+    integrations=[FlaskIntegration()],
+    traces_sample_rate=1.0
+)
+
 app = Flask(__name__)
 
 

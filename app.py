@@ -1,16 +1,27 @@
 """
 Project API
 """
+import json
 import os
 import sys
 import traceback
 from functools import wraps
 from flask import Flask, jsonify, request, send_file, make_response
+from flask_expects_json import expects_json
 from mapping.utils.utils_functions import clean_directory
 from main import map_comments_with_proposals
 
 API_PATH = os.path.split(os.path.realpath(__file__))[0]
 app = Flask(__name__)
+
+
+def load_json_schema() -> dict:
+    with open("json_schema.json", 'r', encoding="utf-8") as json_schema:
+        data = json.load(json_schema)
+    return data
+
+
+schema = load_json_schema()
 
 
 @app.teardown_request
@@ -42,6 +53,7 @@ def check_data(func):
 
 @app.route('/', methods=["POST"])
 @check_data
+@expects_json(schema)
 def index():
     """
     This function get a json file transmitted by the

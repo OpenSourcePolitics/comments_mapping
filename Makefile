@@ -26,8 +26,7 @@ login:
 
 start:
 	@make build
-	docker run --rm -v ${PWD}/dist:/comments_mapping/dist python-mapping
-
+	@make run
 test:
 	pytest $(find ./**/*.py) --cov=${PWD} --cov-fail-under=90 --cov-report term-missing
 

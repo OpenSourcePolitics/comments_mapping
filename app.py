@@ -48,6 +48,9 @@ def check_data(func):
         return func(*args, **kwargs)
     return wrapped
 
+@app.route("/ping", methods=['GET'])
+def ping():
+    return jsonify({'message': 'pong'})
 
 @app.route('/', methods=["POST"])
 @check_data

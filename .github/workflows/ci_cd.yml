@@ -16,28 +16,11 @@ jobs:
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: pip
-      - name: Set Stanza version
-        run: |
-          echo "STANZA_VERSION=$(cat requirements.txt | grep -E -i "^stanza")" >> $GITHUB_ENV
-      - name: Cache Stanzas
-        uses: actions/cache@v3
-        with:
-          path: ~/stanza_resources
-          key: ${{ runner.os }}-stanza-resources-${{ env.STANZA_VERSION }}
-      - name: Set NLTK version
-        run: |
-          echo "NLTK_VERSION=$(cat requirements.txt | grep -E -i "^nltk")" >> $GITHUB_ENV
-      - name: Cache nltk
-        uses: actions/cache@v3
-        with:
-          path: ~/nltk_data
-          key: ${{ runner.os }}-nltk-data-${{ env.NLTK_VERSION }}
       - name: Install dependencies
         run: |
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
       - name: Test with Pytest
         run: |
-          python resources_installation.py
           pytest tests --cov=. --cov-fail-under=90 --cov-report term-missing
   lint:
     runs-on: ubuntu-latest

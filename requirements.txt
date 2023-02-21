@@ -32,3 +32,4 @@ typing_extensions==4.4.0
 urllib3==1.26.5
 Werkzeug==2.0.1
 xlrd==2.0.1
+pylint==2.16.2

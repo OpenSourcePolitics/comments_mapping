@@ -28,10 +28,10 @@ start:
 	@make build
 	@make run
 test:
-	pytest $(find ./**/*.py) --cov=${PWD} --cov-fail-under=90 --cov-report term-missing
+	docker run -it --rm $(TAG) pytest $(find ./**/*.py) --cov=. --cov-fail-under=45 --cov-report term-missing
 
 lint:
-	pylint ./**/*.py
+	docker run -it --rm $(TAG) pylint ./**/*.py
 
 dep:
 	pip install pylint

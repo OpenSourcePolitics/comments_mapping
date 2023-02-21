@@ -82,7 +82,9 @@ disable=raw-checker-failed,
         useless-suppression,
         deprecated-pragma,
         use-symbolic-message-instead,
-        consider-iterating-dictionary
+        consider-iterating-dictionary,
+        missing-function-docstring,
+        pointless-string-statement
 
 
 # Enable the message, report, category or checker with the given id(s). You can
